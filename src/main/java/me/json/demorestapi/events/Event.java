@@ -37,7 +37,7 @@ public class Event {
             this.free = false;
 
         // Update offline
-        if(this.location.isEmpty() || this.location==null)
+        if(this.location== null || this.location.isEmpty())
             this.offline = false;
         else
             this.offline= true;
