@@ -1,5 +1,6 @@
 package me.json.demorestapi.events;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
@@ -21,8 +22,23 @@ public class EventController {
     @Autowired
     EventRepository eventRepository;
 
+    @Autowired
+    ModelMapper modelMapper;
+
     @PostMapping
-    public ResponseEntity createEvent(@RequestBody Event event){
+    public ResponseEntity createEvent(@RequestBody EventDto eventDto){
+
+        /**
+         *  eventRepository를 사용하기 위해서는 원래는 eventDto를 Event로 대입시켜줘야한다.
+         *  이런 과정을 생략하는 방법이 model mapper를 사용하는 것.
+         *
+                Event event = Event.builder()
+                        .name(eventDto.getName())
+                        .description(eventDto.getDescription())
+                        .build();
+         */
+        Event event = modelMapper.map(eventDto, Event.class);
+
         Event newEvent = this.eventRepository.save(event);
         URI createdUri = linkTo(EventController.class).slash(newEvent.getId()).toUri();
         return ResponseEntity.created(createdUri).body(event);        // created 보낼 때는 URI가 있어야한다.
