@@ -32,16 +32,16 @@ public class EventController {
     EventValidator eventValidator;
 
     @PostMapping
-    public ResponseEntity createEvent(@RequestBody @Valid EventDto eventDto, Errors errors){
+    public ResponseEntity createEvent(@RequestBody @Valid EventDto eventDto, Errors errors) {
 
         // Data binding error 검출
-        if(errors.hasErrors()){
+        if (errors.hasErrors()) {
             return ResponseEntity.badRequest().body(errors);
         }
 
         // 로직 에러검출
         eventValidator.validate(eventDto, errors);
-        if(errors.hasErrors()){
+        if (errors.hasErrors()) {
             return ResponseEntity.badRequest().body(errors);
         }
 
@@ -49,10 +49,10 @@ public class EventController {
          *  eventRepository를 사용하기 위해서는 원래는 eventDto를 Event로 대입시켜줘야한다.
          *  이런 과정을 생략하는 방법이 model mapper를 사용하는 것.
          *
-                Event event = Event.builder()
-                        .name(eventDto.getName())
-                        .description(eventDto.getDescription())
-                        .build();
+         Event event = Event.builder()
+         .name(eventDto.getName())
+         .description(eventDto.getDescription())
+         .build();
          */
         Event event = modelMapper.map(eventDto, Event.class);
         event.update();
