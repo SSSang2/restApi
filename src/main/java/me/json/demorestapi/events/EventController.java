@@ -27,12 +27,23 @@ public class EventController {
     @Autowired
     ModelMapper modelMapper;
 
+    @Autowired
+    EventValidator eventValidator;
+
     @PostMapping
     public ResponseEntity createEvent(@RequestBody @Valid EventDto eventDto, Errors errors){
 
+        // Data binding error 검출
         if(errors.hasErrors()){
             return ResponseEntity.badRequest().build();
         }
+
+        // 로직 에러검출
+        eventValidator.validate(eventDto, errors);
+        if(errors.hasErrors()){
+            return ResponseEntity.badRequest().build();
+        }
+
         /**
          *  eventRepository를 사용하기 위해서는 원래는 eventDto를 Event로 대입시켜줘야한다.
          *  이런 과정을 생략하는 방법이 model mapper를 사용하는 것.
