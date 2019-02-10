@@ -54,7 +54,7 @@ public class EventController {
                         .build();
          */
         Event event = modelMapper.map(eventDto, Event.class);
-
+        event.update();
         Event newEvent = this.eventRepository.save(event);
         URI createdUri = linkTo(EventController.class).slash(newEvent.getId()).toUri();
         return ResponseEntity.created(createdUri).body(event);        // created 보낼 때는 URI가 있어야한다.
