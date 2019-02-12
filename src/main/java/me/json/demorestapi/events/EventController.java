@@ -1,5 +1,6 @@
 package me.json.demorestapi.events;
 
+import me.json.demorestapi.common.ErrorsResource;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
@@ -37,13 +38,14 @@ public class EventController {
 
         // Data binding error 검출
         if (errors.hasErrors()) {
-            return ResponseEntity.badRequest().body(errors);
+            //return ResponseEntity.badRequest().body(errors);
+            return badRequest(errors);
         }
 
         // 로직 에러검출
         eventValidator.validate(eventDto, errors);
         if (errors.hasErrors()) {
-            return ResponseEntity.badRequest().body(errors);
+            return badRequest(errors);
         }
 
         /**
@@ -65,6 +67,10 @@ public class EventController {
         eventResource.add(selfLinkBuilder.withRel("update-event"));
         eventResource.add(new Link("/docs/index.html/#resources-event-create").withRel("profile"));
         return ResponseEntity.created(createdUri).body(eventResource);        // created 보낼 때는 URI가 있어야한다.
+    }
+
+    private ResponseEntity<ErrorsResource> badRequest(Errors errors) {
+        return ResponseEntity.badRequest().body(new ErrorsResource(errors));
     }
 }
 
