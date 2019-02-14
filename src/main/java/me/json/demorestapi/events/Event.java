@@ -1,6 +1,7 @@
 package me.json.demorestapi.events;
 
 import lombok.*;
+import me.json.demorestapi.accounts.Account;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -27,7 +28,8 @@ public class Event {
     private boolean free;
     @Enumerated(EnumType.STRING)
     private EventStatus eventStatus = EventStatus.DRAFT;
-
+    @ManyToOne// Event에서 Account로 단반향 오너
+    private Account manager;
 
     public void update() {
         // Update free
